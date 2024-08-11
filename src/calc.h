@@ -44,7 +44,8 @@ private:
 	std::queue<Token> tokenize(std::string& input);
 	double calculate(std::queue<Token>& input);
 	double doOperation(char op, double l, double r);
-	constexpr int getOperatorPower(char op);
+	bool isCurrentMorePowerful(char last, char current) const;
+	constexpr int getOperatorPower(char op) const;
 	void moveAllOperators(std::queue<Token>& out, std::stack<Token>& ops);
 
 	void debugPrint(const std::queue<Token>& tokens) const;

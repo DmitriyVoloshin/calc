@@ -69,19 +69,30 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 			{
 				minusDetected = true;
 			}
+			else if (c == '(')
+			{
+				lastToken = Token{c};
+				opStack.push(lastToken);
+			}
 			else
 			{
 				if (!opStack.empty())
 				{
 					char lastOp = opStack.top().opCode;
-					if (getOperatorPower(lastOp) >= getOperatorPower(c))
+					if (!isCurrentMorePowerful(lastOp, c))
 					{
 						moveAllOperators(outputQueue, opStack);
 					}
 				}
-
-				lastToken = Token{c};
-				opStack.push(lastToken);
+				if (c != ')')
+				{
+					lastToken = Token{c};
+					opStack.push(lastToken);
+				}
+				else
+				{
+					moveAllOperators(outputQueue, opStack);
+				}
 			}
 		}
 	}
@@ -108,7 +119,8 @@ inline bool Calculator::isDigit(char in)
 
 inline bool Calculator::isOperator(char c)
 {
-	return c == '+' || c == '-' || c == '*' || c == '/';
+	return c == '+' || c == '-' || c == '*' || c == '/' ||
+		   c == '(' || c == ')';
 }
 
 
@@ -117,6 +129,11 @@ void Calculator::moveAllOperators(std::queue<Token>& out, std::stack<Token>& ops
 	while (!ops.empty())
 	{
 		Token t = ops.top();
+		if (t.opCode == '(')
+		{
+			ops.pop();
+			return;
+		}
 		out.push(t);
 		ops.pop();
 	}
@@ -204,7 +221,16 @@ double Calculator::doOperation(char op, double l, double r)
 	return 0;
 }
 
-constexpr int Calculator::getOperatorPower(char op)
+bool Calculator::isCurrentMorePowerful(char last, char current) const
+{
+	if (last == '(')
+	{
+		return false;
+	}
+	return getOperatorPower(last) < getOperatorPower(current);
+}
+
+constexpr int Calculator::getOperatorPower(char op) const
 {
 	switch (op)
 	{

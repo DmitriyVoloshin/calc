@@ -318,7 +318,7 @@ TEST(Order, MiddleOperatorHasMorePowerWithNegativeNumberAfterwards)
 }
 
 
-/*
+
 TEST_GROUP(Brackets)
 {
 	Calculator* calc;
@@ -421,7 +421,7 @@ TEST(Order, BracesInTheEnd)
 	input = "1*1-(2+10)";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(-11, result, 0.001);
-}*/
+}
 
 
 
