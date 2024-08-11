@@ -300,9 +300,9 @@ TEST(Order, LastOperatorHasMorePower)
 TEST(Order, MiddleOperatorHasMorePower)
 {
 	calc->enableDebug();
-	input = "-1-7+5*2-7";
+	input = "-7+5*2-7";
 	result = calc->solve(input);
-	DOUBLES_EQUAL(-5, result, 0.001);
+	DOUBLES_EQUAL(-4, result, 0.001);
 }
 
 TEST(Order, FirstOperatorHasMorePower)

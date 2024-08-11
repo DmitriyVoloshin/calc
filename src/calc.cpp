@@ -64,22 +64,27 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 
 		if (isOperator(c))
 		{
+			char modifiedOp = c;
+
+
 			if (c == '-')
 			{
 				minusDetected = true;
+				modifiedOp = '+';
 			}
+
+
 			else
 			{
 				if (!opStack.empty())
 				{
 					lastOp = opStack.top();
-					if (getOperatorPower(lastOp) > getOperatorPower(c))
+					if (getOperatorPower(lastOp) > getOperatorPower(modifiedOp))
 					{
 						moveAllOperators(outputQueue, opStack);
 					}
 				}
-
-				opStack.push(c);
+				opStack.push(modifiedOp);
 			}
 		}
 	}
