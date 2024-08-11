@@ -32,9 +32,11 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 {
 	std::queue<Token> outputQueue;
 	std::stack<char> opStack;
+	char lastOp;
 
 	double number;
 	bool wasBuildingNumber = false;
+	bool minusDetected = false;
 
 	for (const auto c : in)
 	{
@@ -51,28 +53,48 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 		}
 		else if(wasBuildingNumber)
 		{
+			if (minusDetected)
+			{
+				number = -number;
+				minusDetected = false;
+			}
 			outputQueue.emplace(number);
 			wasBuildingNumber = false;
 		}
 
 		if (isOperator(c))
 		{
-			opStack.push(c);
+			if (c == '-')
+			{
+				minusDetected = true;
+			}
+			else
+			{
+				if (!opStack.empty())
+				{
+					lastOp = opStack.top();
+					if (getOperatorPower(lastOp) > getOperatorPower(c))
+					{
+						moveAllOperators(outputQueue, opStack);
+					}
+				}
+
+				opStack.push(c);
+			}
 		}
 	}
 
 	if (wasBuildingNumber)
 	{
+		if (minusDetected)
+		{
+			number = -number;
+			minusDetected = false;
+		}
 		outputQueue.emplace(number);
 		wasBuildingNumber = false;
 	}
-
-	while (!opStack.empty())
-	{
-		Token tk{opStack.top()};
-		outputQueue.push(tk);
-		opStack.pop();
-	}
+	moveAllOperators(outputQueue, opStack);
 
 	return outputQueue;
 }
@@ -84,7 +106,17 @@ inline bool Calculator::isDigit(char in)
 
 inline bool Calculator::isOperator(char c)
 {
-	return c == '+' || c == '-';
+	return c == '+' || c == '-' || c == '*' || c == '/';
+}
+
+
+void Calculator::moveAllOperators(std::queue<Token>& out, std::stack<char>& ops)
+{
+	while (!ops.empty())
+	{
+		out.emplace(ops.top());
+		ops.pop();
+	}
 }
 
 void Calculator::debugPrint(const std::queue<Token>& tokens) const
@@ -133,6 +165,21 @@ inline double Calculator::calculate(std::queue<Token>& input)
 		input.pop();
 	}
 
+	while(numbers.size() != 1)
+	{
+		double right = numbers.top();
+		numbers.pop();
+
+		double left = 0;
+		if (!numbers.empty())
+		{
+			left = numbers.top();
+			numbers.pop();
+		}
+		double result = doOperation('+', left, right);
+		numbers.push(result);
+	}
+
 
 	return numbers.top();
 }
@@ -145,9 +192,29 @@ double Calculator::doOperation(char op, double l, double r)
 			return l - r;
 		case '+':
 			return l + r;
+		case '*':
+			return l * r;
+		case '/':
+			return l / r;
 	}
 
 	return 0;
+}
+
+constexpr int Calculator::getOperatorPower(char op)
+{
+	switch (op)
+	{
+		case '-' :
+		case '+':
+			return 1;
+		case '*':
+		case '/':
+			return 2;
+
+		default:
+			return 100;
+	}
 }
 
 void Calculator::enableDebug()

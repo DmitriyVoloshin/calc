@@ -3,7 +3,7 @@
 
 #include "../src/calc.h"
 
-TEST_GROUP(CalcTest)
+TEST_GROUP(BasicOperations)
 {
 	Calculator* calc;
 	std::string input {""};
@@ -21,14 +21,14 @@ TEST_GROUP(CalcTest)
 	}
 };
 
-TEST(CalcTest, CanPassEmptyString)
+TEST(BasicOperations, CanPassEmptyString)
 {
 	result = calc->solve(input);
 
 	DOUBLES_EQUAL(0, result, 0.001);
 }
 
-TEST(CalcTest, CanPassZero)
+TEST(BasicOperations, CanPassZero)
 {
 	input = std::to_string(0);
 	result = calc->solve(input);
@@ -37,7 +37,7 @@ TEST(CalcTest, CanPassZero)
 }
 
 
-TEST(CalcTest, CanPass1Value)
+TEST(BasicOperations, CanPass1Value)
 {
 	for (int i = 1; i < 10; i++)
 	{
@@ -47,7 +47,7 @@ TEST(CalcTest, CanPass1Value)
 	}
 }
 
-TEST(CalcTest, CanPassCombinedValue)
+TEST(BasicOperations, CanPassCombinedValue)
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -57,7 +57,7 @@ TEST(CalcTest, CanPassCombinedValue)
 	}
 }
 
-TEST(CalcTest, CanPassLongValue)
+TEST(BasicOperations, CanPassLongValue)
 {
 	int val = std::numeric_limits<int>::max();
 	input = std::to_string(val);
@@ -65,7 +65,7 @@ TEST(CalcTest, CanPassLongValue)
 	DOUBLES_EQUAL(val, result, 0.001);
 }
 
-TEST(CalcTest, CanPass1NegativeValue)
+TEST(BasicOperations, CanPass1NegativeValue)
 {
 	for (int i = -1; i > -10; i--)
 	{
@@ -76,7 +76,7 @@ TEST(CalcTest, CanPass1NegativeValue)
 }
 
 
-TEST(CalcTest, CanPassLongNegativeValue)
+TEST(BasicOperations, CanPassLongNegativeValue)
 {
 	int val = std::numeric_limits<int>::min();
 	input = std::to_string(val);
@@ -84,74 +84,232 @@ TEST(CalcTest, CanPassLongNegativeValue)
 	DOUBLES_EQUAL(val, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbers)
+TEST(BasicOperations, CanAddOneDigitNumbers)
 {
 	input = "1+1";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddMultipleDigintsFirstNumber)
+TEST(BasicOperations, CanAddMultipleDigintsFirstNumber)
 {
 	input = "99+1";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(100, result, 0.001);
 }
 
-TEST(CalcTest, CanAddMultipleDigintsSecondNumber)
+TEST(BasicOperations, CanAddMultipleDigintsSecondNumber)
 {
 	input = "1+100";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(101, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithSpaces)
+TEST(BasicOperations, CanAddOneDigitNumbersWithSpaces)
 {
 	input = "1 + 1";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithMultipleSpaces)
+TEST(BasicOperations, CanAddOneDigitNumbersWithMultipleSpaces)
 {
 	input = "1  +    1";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithPrefixSpace)
+TEST(BasicOperations, CanAddOneDigitNumbersWithPrefixSpace)
 {
 	input = " 1+1";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithPrefixMultipleSpaces)
+TEST(BasicOperations, CanAddOneDigitNumbersWithPrefixMultipleSpaces)
 {
 	input = "     1+1";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithPostfixSpace)
+TEST(BasicOperations, CanAddOneDigitNumbersWithPostfixSpace)
 {
 	input = "1+1 ";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithPostfixMultipleSpaces)
+TEST(BasicOperations, CanAddOneDigitNumbersWithPostfixMultipleSpaces)
 {
 	input = "1+1    ";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
 
-TEST(CalcTest, CanAddOneDigitNumbersWithMultiplePrefixPostfixAndMidSpaces)
+TEST(BasicOperations, CanAddOneDigitNumbersWithMultiplePrefixPostfixAndMidSpaces)
 {
 	input = "    1   + 1     ";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
+}
+
+
+TEST(BasicOperations, CanSubstructOneDigitNumbers)
+{
+	input = "1-1";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(0, result, 0.001);
+}
+
+TEST(BasicOperations, CanSubstructMultipleDigitNumbers)
+{
+	input = "100-1";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(99, result, 0.001);
+}
+
+TEST(BasicOperations, CanAddMultipleNumbers)
+{
+	input = "1+1+35";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(37, result, 0.001);
+}
+
+TEST(BasicOperations, CanAddFromNegativeNumber)
+{
+	input = "-1+8";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(7, result, 0.001);
+}
+
+TEST(BasicOperations, CanSubstractMultipleNumbers)
+{
+	input = "99-1-1";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(97, result, 0.001);
+}
+
+TEST(BasicOperations, CanSubstractnegativeNumbers)
+{
+	input = "-1-1";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-2, result, 0.001);
+}
+
+TEST(BasicOperations, CanMultiplyNumbers)
+{
+	input = "2*3";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(6, result, 0.001);
+}
+
+TEST(BasicOperations, CanMultiplyByZero)
+{
+	input = "0*3";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(0, result, 0.001);
+}
+
+TEST(BasicOperations, CanMultiplyFirstNegativeNumber)
+{
+	input = "-1*7";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-7, result, 0.001);
+}
+
+TEST(BasicOperations, CanMultiplySecondNegativeNumber)
+{
+	input = "1*-7";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-7, result, 0.001);
+}
+
+TEST(BasicOperations, CanMultiplyTwoNegativeNumbers)
+{
+	input = "-1*-7";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(7, result, 0.001);
+}
+
+TEST(BasicOperations, CanDivideNumbers)
+{
+	input = "1/10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(0.1, result, 0.001);
+}
+
+TEST(BasicOperations, CanDivideNumbers2)
+{
+	input = "110/10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(11, result, 0.001);
+}
+
+TEST(BasicOperations, CanDivideNegativeFirstNumber)
+{
+	input = "-110/10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-11, result, 0.001);
+}
+
+TEST(BasicOperations, CanDivideNegativeSecondNumber)
+{
+	input = "110/-10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-11, result, 0.001);
+}
+
+TEST(BasicOperations, CanDivideNegativeNumbers)
+{
+	input = "-110/-10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(11, result, 0.001);
+}
+
+
+
+TEST_GROUP(Order)
+{
+	Calculator* calc;
+	std::string input {""};
+	double result;
+
+	void setup()
+	{
+		calc = new Calculator();
+		result = 0;
+	}
+
+	void teardown()
+	{
+		delete calc;
+	}
+};
+
+
+
+TEST(Order, LastOperatorHasMorePower)
+{
+	input = "-1-7+5+2*9";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(15, result, 0.001);
+}
+
+
+TEST(Order, MiddleOperatorHasMorePower)
+{
+	calc->enableDebug();
+	input = "-1-7+5*2-7";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-5, result, 0.001);
+}
+
+TEST(Order, FirstOperatorHasMorePower)
+{
+	input = "-1*7+5+2-7";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-7, result, 0.001);
 }
 
 
