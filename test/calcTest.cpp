@@ -28,9 +28,18 @@ TEST(CalcTest, CanPassEmptyString)
 	DOUBLES_EQUAL(0, result, 0.001);
 }
 
+TEST(CalcTest, CanPassZero)
+{
+	input = std::to_string(0);
+	result = calc->solve(input);
+
+	DOUBLES_EQUAL(0, result, 0.001);
+}
+
+
 TEST(CalcTest, CanPass1Value)
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 1; i < 10; i++)
 	{
 		input = std::to_string(i);
 		result = calc->solve(input);
@@ -58,7 +67,7 @@ TEST(CalcTest, CanPassLongValue)
 
 TEST(CalcTest, CanPass1NegativeValue)
 {
-	for (int i = 0; i > -10; i--)
+	for (int i = -1; i > -10; i--)
 	{
 		input = std::to_string(i);
 		result = calc->solve(input);
@@ -81,7 +90,21 @@ TEST(CalcTest, CanAddOneDigitNumbers)
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
 }
-/*
+
+TEST(CalcTest, CanAddMultipleDigintsFirstNumber)
+{
+	input = "99+1";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(100, result, 0.001);
+}
+
+TEST(CalcTest, CanAddMultipleDigintsSecondNumber)
+{
+	input = "1+100";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(101, result, 0.001);
+}
+
 TEST(CalcTest, CanAddOneDigitNumbersWithSpaces)
 {
 	input = "1 + 1";
@@ -129,7 +152,7 @@ TEST(CalcTest, CanAddOneDigitNumbersWithMultiplePrefixPostfixAndMidSpaces)
 	input = "    1   + 1     ";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(2, result, 0.001);
-}*/
+}
 
 
 

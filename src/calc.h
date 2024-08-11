@@ -3,31 +3,68 @@
 
 #include <string>
 #include <stack>
+#include <queue>
+
+#include <iostream>
 
 class Calculator
 {
 public:
+	Calculator();
+
 	double solve(std::string& in);
 
+	void enableDebug();
+	void disableDebug();
 
 private:
-	enum class Type
+	bool isDigit(char c);
+	bool isOperator(char c);
+
+	enum class TokenType
 	{
-		NONE,
-		DIGIT,
-		OPERATION
+		EMPTY,
+		NUMBER,
+		OPERATOR
 	};
 
-	struct Term
+	struct Token
 	{
-		Type type;
-		double value;
+		TokenType type;
+		union {
+			double value;
+			char opCode;
+		};
+		Token();
+		explicit Token(double value);
+		explicit Token(char opCode);
+
 	};
 
-	std::stack<Term> stack;
+	std::queue<Token> tokenize(std::string& input);
+	double calculate(std::queue<Token>& input);
+	double doOperation(char op, double l, double r);
+
+	void debugPrint(const std::queue<Token>& tokens) const;
+	bool isDebugging;
+
+	friend std::ostream& operator<<(std::ostream& os, const Calculator::Token& t);
 };
 
 
+inline std::ostream& operator<<(std::ostream& os, const Calculator::Token& t)
+{
+	if (t.type == Calculator::TokenType::NUMBER)
+	{
+		os << "NUM:" << t.value << std::endl;
+	}
+
+	else
+	{
+		os << "OP:" << t.opCode << std::endl;
+	}
+	return os;
+}
 
 
 #endif /* SRC_CALC_H_ */
