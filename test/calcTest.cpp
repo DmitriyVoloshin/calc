@@ -423,5 +423,19 @@ TEST(Order, BracesInTheEnd)
 	DOUBLES_EQUAL(-11, result, 0.001);
 }
 
+TEST(Order, MultipleActionsInBraces1)
+{
+	input = "(2*2-1*2-1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(1, result, 0.001);
+}
+
+TEST(Order, MultipleActionsInBraces2)
+{
+	input = "(1-1*2/-1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(3, result, 0.001);
+}
+
 
 

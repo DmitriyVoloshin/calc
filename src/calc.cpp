@@ -74,25 +74,32 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 				lastToken = Token{c};
 				opStack.push(lastToken);
 			}
+			else if (c == ')')
+			{
+				moveOperatorsUntilBracet(outputQueue, opStack);
+				opStack.pop();
+			}
 			else
 			{
 				if (!opStack.empty())
 				{
-					char lastOp = opStack.top().opCode;
-					if (!isCurrentMorePowerful(lastOp, c))
+					while (!opStack.empty())
 					{
-						moveAllOperators(outputQueue, opStack);
+						Token lastOp = opStack.top();
+						if (getOperatorPower(lastOp.opCode) >= getOperatorPower(c) && lastOp.opCode != '(')
+						{
+							outputQueue.push(lastOp);
+							opStack.pop();
+						}
+						else
+						{
+							break;
+						}
+
 					}
 				}
-				if (c != ')')
-				{
-					lastToken = Token{c};
-					opStack.push(lastToken);
-				}
-				else
-				{
-					moveAllOperators(outputQueue, opStack);
-				}
+				lastToken = Token{c};
+				opStack.push(lastToken);
 			}
 		}
 	}
@@ -107,10 +114,21 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 		outputQueue.emplace(number);
 		wasBuildingNumber = false;
 	}
-	moveAllOperators(outputQueue, opStack);
+	moveOperatorsUntilBracet(outputQueue, opStack);
 
 	return outputQueue;
 }
+
+
+bool Calculator::isCurrentMorePowerful(char last, char current) const
+{
+	if (last == '(')
+	{
+		return true;
+	}
+	return getOperatorPower(last) < getOperatorPower(current);
+}
+
 
 inline bool Calculator::isDigit(char in)
 {
@@ -124,16 +142,13 @@ inline bool Calculator::isOperator(char c)
 }
 
 
-void Calculator::moveAllOperators(std::queue<Token>& out, std::stack<Token>& ops)
+void Calculator::moveOperatorsUntilBracet(std::queue<Token>& out, std::stack<Token>& ops)
 {
 	while (!ops.empty())
 	{
 		Token t = ops.top();
 		if (t.opCode == '(')
-		{
-			ops.pop();
 			return;
-		}
 		out.push(t);
 		ops.pop();
 	}
@@ -219,15 +234,6 @@ double Calculator::doOperation(char op, double l, double r)
 	}
 
 	return 0;
-}
-
-bool Calculator::isCurrentMorePowerful(char last, char current) const
-{
-	if (last == '(')
-	{
-		return false;
-	}
-	return getOperatorPower(last) < getOperatorPower(current);
 }
 
 constexpr int Calculator::getOperatorPower(char op) const

@@ -46,7 +46,7 @@ private:
 	double doOperation(char op, double l, double r);
 	bool isCurrentMorePowerful(char last, char current) const;
 	constexpr int getOperatorPower(char op) const;
-	void moveAllOperators(std::queue<Token>& out, std::stack<Token>& ops);
+	void moveOperatorsUntilBracet(std::queue<Token>& out, std::stack<Token>& ops);
 
 	void debugPrint(const std::queue<Token>& tokens) const;
 	bool isDebugging;
