@@ -288,7 +288,6 @@ TEST_GROUP(Order)
 };
 
 
-
 TEST(Order, LastOperatorHasMorePower)
 {
 	input = "-1-7+5+2*9";
@@ -299,7 +298,6 @@ TEST(Order, LastOperatorHasMorePower)
 
 TEST(Order, MiddleOperatorHasMorePower)
 {
-	calc->enableDebug();
 	input = "-7+5*2-7";
 	result = calc->solve(input);
 	DOUBLES_EQUAL(-4, result, 0.001);
@@ -311,6 +309,119 @@ TEST(Order, FirstOperatorHasMorePower)
 	result = calc->solve(input);
 	DOUBLES_EQUAL(-7, result, 0.001);
 }
+
+TEST(Order, MiddleOperatorHasMorePowerWithNegativeNumberAfterwards)
+{
+	input = "-7+5*-2+7";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-10, result, 0.001);
+}
+
+
+/*
+TEST_GROUP(Brackets)
+{
+	Calculator* calc;
+	std::string input {""};
+	double result;
+
+	void setup()
+	{
+		calc = new Calculator();
+		result = 0;
+	}
+
+	void teardown()
+	{
+		delete calc;
+	}
+};
+
+
+TEST(Order, CanAddWithBrackets)
+{
+	input = "(1+1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(2, result, 0.001);
+}
+
+TEST(Order, CanSubstructWithBraces)
+{
+	input = "(10-2)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(8, result, 0.001);
+}
+
+TEST(Order, CanSubstructTwoNegativeNumbersWithBraces)
+{
+	input = "(-10-2)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-12, result, 0.001);
+}
+
+TEST(Order, CanAddAndMultipyWithBrackets)
+{
+	input = "(1*2+1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(3, result, 0.001);
+}
+
+TEST(Order, CanMultipyNegativeNumberAndAddWithBrackets)
+{
+	input = "(-1*2+1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-1, result, 0.001);
+}
+
+TEST(Order, SpacesDontBreakBraces)
+{
+	input = "( -1  *2 + 1  )";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-1, result, 0.001);
+}
+
+
+TEST(Order, AddWithBracesAndMultiplyResult)
+{
+	input = "(1+1)*2";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(4, result, 0.001);
+}
+
+TEST(Order, AddWithBracesMultiplyResultAndAdd)
+{
+	input = "(1+1)*2+6";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(10, result, 0.001);
+}
+
+TEST(Order, AddWithBracesMultiplyResultAndSubstruct)
+{
+	input = "(1+1)*2-10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-6, result, 0.001);
+}
+
+TEST(Order, BracesInTheMiddle1)
+{
+	input = "1+(1*2)-10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-7, result, 0.001);
+}
+
+TEST(Order, BracesInTheMiddle2)
+{
+	input = "1*(1+2)*10";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(30, result, 0.001);
+}
+
+TEST(Order, BracesInTheEnd)
+{
+	input = "1*1-(2+10)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-11, result, 0.001);
+}*/
 
 
 

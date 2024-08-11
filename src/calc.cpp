@@ -31,8 +31,8 @@ double Calculator::solve(std::string& in)
 std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 {
 	std::queue<Token> outputQueue;
-	std::stack<char> opStack;
-	char lastOp;
+	std::stack<Token> opStack;
+	Token lastToken;
 
 	double number;
 	bool wasBuildingNumber = false;
@@ -58,33 +58,30 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 				number = -number;
 				minusDetected = false;
 			}
-			outputQueue.emplace(number);
+			lastToken = Token{number};
+			outputQueue.push(lastToken);
 			wasBuildingNumber = false;
 		}
 
 		if (isOperator(c))
 		{
-			char modifiedOp = c;
-
-
-			if (c == '-')
+			if (c == '-' && lastToken.type != TokenType::NUMBER)
 			{
 				minusDetected = true;
-				modifiedOp = '+';
 			}
-
-
 			else
 			{
 				if (!opStack.empty())
 				{
-					lastOp = opStack.top();
-					if (getOperatorPower(lastOp) > getOperatorPower(modifiedOp))
+					char lastOp = opStack.top().opCode;
+					if (getOperatorPower(lastOp) >= getOperatorPower(c))
 					{
 						moveAllOperators(outputQueue, opStack);
 					}
 				}
-				opStack.push(modifiedOp);
+
+				lastToken = Token{c};
+				opStack.push(lastToken);
 			}
 		}
 	}
@@ -115,11 +112,12 @@ inline bool Calculator::isOperator(char c)
 }
 
 
-void Calculator::moveAllOperators(std::queue<Token>& out, std::stack<char>& ops)
+void Calculator::moveAllOperators(std::queue<Token>& out, std::stack<Token>& ops)
 {
 	while (!ops.empty())
 	{
-		out.emplace(ops.top());
+		Token t = ops.top();
+		out.push(t);
 		ops.pop();
 	}
 }
