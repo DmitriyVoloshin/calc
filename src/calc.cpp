@@ -67,7 +67,7 @@ std::queue<Calculator::Token> Calculator::tokenize(std::string& in)
 		{
 			if (c == '-' && lastToken.type != TokenType::NUMBER)
 			{
-				minusDetected = true;
+				minusDetected = !minusDetected;
 			}
 			else if (c == '(')
 			{

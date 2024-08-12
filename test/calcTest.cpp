@@ -472,5 +472,12 @@ TEST(Order, DoubleBraces5)
 	DOUBLES_EQUAL(-1, result, 0.001);
 }
 
+TEST(Order, DoubleBraces6)
+{
+	input = "-(-1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(1, result, 0.001);
+}
+
 
 
