@@ -451,5 +451,26 @@ TEST(Order, DoubleBraces2)
 	DOUBLES_EQUAL(3, result, 0.001);
 }
 
+TEST(Order, DoubleBraces3)
+{
+	input = "(-1/(1-2)*2/(-1+2))";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(2, result, 0.001);
+}
+
+TEST(Order, DoubleBraces4)
+{
+	input = "(-1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-1, result, 0.001);
+}
+
+TEST(Order, DoubleBraces5)
+{
+	input = "-(1)";
+	result = calc->solve(input);
+	DOUBLES_EQUAL(-1, result, 0.001);
+}
+
 
 
